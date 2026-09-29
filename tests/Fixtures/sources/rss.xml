@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Kerala Football Association</title>
+    <link>https://kfa.example.org</link>
+    <description>Latest news</description>
+    <item>
+      <title>Santosh Trophy 2026: Kerala squad announced for group stage</title>
+      <link>https://kfa.example.org/news/santosh-trophy-squad?utm_source=rss&amp;utm_medium=feed</link>
+      <guid>https://kfa.example.org/?p=101</guid>
+      <pubDate>{{recent}}</pubDate>
+      <dc:creator>KFA Media</dc:creator>
+      <description><![CDATA[<p>The <b>Kerala Football Association</b> has named its 22-member squad.</p>]]></description>
+      <media:thumbnail url="https://kfa.example.org/img/squad.jpg" />
+    </item>
+    <item>
+      <title>U-17 district trials in Kochi on Sunday</title>
+      <link>https://kfa.example.org/news/u17-trials-kochi</link>
+      <guid>https://kfa.example.org/?p=102</guid>
+      <pubDate>{{recent}}</pubDate>
+      <description>Registration is open for players born after 2009.</description>
+    </item>
+    <item>
+      <title>Archive: 2019 season review</title>
+      <link>https://kfa.example.org/news/2019-review</link>
+      <guid>https://kfa.example.org/?p=5</guid>
+      <pubDate>Mon, 02 Sep 2019 10:00:00 +0530</pubDate>
+      <description>Old news.</description>
+    </item>
+  </channel>
+</rss>

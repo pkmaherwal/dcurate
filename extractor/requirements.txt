@@ -1,0 +1,10 @@
+fastapi==0.141.*
+uvicorn[standard]==0.54.*
+httpx==0.28.*
+trafilatura==2.0.*
+htmldate==1.9.*
+html2text==2025.4.15
+lxml==6.*
+crawl4ai==0.9.*
+# Must match the Playwright base image in the Dockerfile.
+playwright==1.63.0

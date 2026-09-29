@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+  <url>
+    <loc>https://www.example-ff.org/news/santosh-trophy-2026-schedule-announced</loc>
+    <news:news>
+      <news:publication><news:name>EFF</news:name><news:language>en</news:language></news:publication>
+      <news:publication_date>{{recent_iso}}</news:publication_date>
+      <news:title>Santosh Trophy 2026 schedule announced</news:title>
+    </news:news>
+  </url>
+  <url>
+    <loc>https://www.example-ff.org/news/old-circular-2019</loc>
+    <lastmod>2019-01-01</lastmod>
+  </url>
+</urlset>

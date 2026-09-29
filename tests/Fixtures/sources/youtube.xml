@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
+ <title>Indian Football TV</title>
+ <entry>
+  <id>yt:video:abc123XYZ00</id>
+  <yt:videoId>abc123XYZ00</yt:videoId>
+  <yt:channelId>UCabcdefghijklmnopqrstuv</yt:channelId>
+  <title>Durand Cup 2026 | Quarter-final highlights</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=abc123XYZ00"/>
+  <author><name>Indian Football TV</name></author>
+  <published>{{recent_iso}}</published>
+  <media:group>
+   <media:title>Durand Cup 2026 | Quarter-final highlights</media:title>
+   <media:description>All goals from the quarter-final in Kolkata.</media:description>
+   <media:thumbnail url="https://i1.ytimg.com/vi/abc123XYZ00/hqdefault.jpg" width="480" height="360"/>
+  </media:group>
+ </entry>
+</feed>

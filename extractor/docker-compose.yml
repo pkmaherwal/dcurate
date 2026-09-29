@@ -1,0 +1,25 @@
+# Sidecars for the curation app. Both listen on localhost only.
+#
+#   docker compose up -d                    # extractor
+#   docker compose --profile rsshub up -d   # extractor + self-hosted RSSHub
+services:
+  extractor:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8100:8100"
+    environment:
+      EXTRACTOR_TOKEN: ${EXTRACTOR_TOKEN:-}
+    shm_size: "1gb"
+    mem_limit: 2g
+
+  rsshub:
+    image: diygod/rsshub:latest
+    profiles: ["rsshub"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1200:1200"
+    environment:
+      NODE_ENV: production
+      CACHE_TYPE: memory
+    mem_limit: 1g
