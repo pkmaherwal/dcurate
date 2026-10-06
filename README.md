@@ -52,7 +52,7 @@ cd extractor && pytest               # extractor unit tests
 
 ## Deployment
 
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) (Hostinger VPS: Nginx, PHP-FPM, MySQL, Redis, Supervisor/Horizon, cron, Docker).
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) (Hostinger VPS with AlmaLinux 9 + CyberPanel: OpenLiteSpeed, LSPHP 8.3, MariaDB, Redis, Supervisor/Horizon, cron, Docker). Updates: `bash deploy/deploy.sh <domain>`.
 
 ## Turning on SaaS mode later
 

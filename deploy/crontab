@@ -1,2 +1,3 @@
-# crontab -u www-data -e
-* * * * * cd /var/www/dc/current && php artisan schedule:run >> /dev/null 2>&1
+# Laravel scheduler (source fetches, AI sweeps, pruning). Runs as the site user.
+# Add it in CyberPanel (Websites → Manage → Cron Jobs) or with: crontab -u <siteuser> -e
+* * * * * cd /home/__DOMAIN__/dc && /usr/local/lsws/lsphp83/bin/php artisan schedule:run >> /dev/null 2>&1
