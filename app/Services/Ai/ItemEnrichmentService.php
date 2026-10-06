@@ -3,7 +3,6 @@
 namespace App\Services\Ai;
 
 use App\Ai\Agents\ItemEnricher;
-use App\Ai\Agents\RelevancePrefilter;
 use App\Ai\AiRouting;
 use App\Ai\CampaignSchemaBuilder;
 use App\Ai\StructuredOutput;
@@ -67,10 +66,6 @@ class ItemEnrichmentService
         }
 
         try {
-            if (filled($workspace->setting('ai.prefilter_model')) && ! $this->passesPrefilter($item, $workspace)) {
-                return true;
-            }
-
             $response = (new ItemEnricher($item->campaign, $workspace))->prompt($this->prompt($item), attachments: $this->attachments($item));
             $this->track($workspace, $response, 'enrich');
             $this->apply($item, $response);
@@ -125,29 +120,6 @@ class ItemEnrichmentService
     {
         return $item->published_at !== null
             && $item->published_at->lt(now()->subDays($item->campaign->freshness_days));
-    }
-
-    protected function passesPrefilter(Item $item, Workspace $workspace): bool
-    {
-        $response = (new RelevancePrefilter($item->campaign, $workspace))->prompt($this->prompt($item));
-        $this->track($workspace, $response, 'prefilter');
-
-        $data = $this->structured($response);
-        $relevance = max(0, min(100, (int) ($data['relevance'] ?? 0)));
-
-        if ($relevance >= (int) config('curation.ai.relevance_threshold', 30)) {
-            return true;
-        }
-
-        $item->forceFill([
-            'ai_status' => AiStatus::Done,
-            'ai_relevance' => $relevance,
-            'ai_reason' => Str::limit((string) ($data['reason'] ?? ''), 1000),
-            'ai_model' => $response->meta->model,
-            'enriched_at' => now(),
-        ])->save();
-
-        return false;
     }
 
     protected function apply(Item $item, AgentResponse $response): void

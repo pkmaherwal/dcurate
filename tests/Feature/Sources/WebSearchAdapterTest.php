@@ -35,7 +35,7 @@ class WebSearchAdapterTest extends TestCase
 
     protected function fakeCitations(): void
     {
-        WebSearchDiscoverer::fake([new AgentResponse('inv', '- Kerala U-17 league announced [1]', new TextUsage(1200, 150), new Meta('openai', 'gpt-5.4-nano', collect([
+        WebSearchDiscoverer::fake([new AgentResponse('inv', '- Kerala U-17 league announced [1]', new TextUsage(1200, 150), new Meta('openai', 'gpt-6-luna', collect([
             new UrlCitation('https://www.thehindu.com/sport/football/kerala-u17-league-announced/article123.ece?utm_source=openai', 'Kerala U-17 league announced'),
             new UrlCitation('https://www.thehindu.com/sport/football/kerala-u17-league-announced/article123.ece', 'Duplicate citation'),
             new UrlCitation('https://www.instagram.com/keralafa/', 'KFA Instagram'),

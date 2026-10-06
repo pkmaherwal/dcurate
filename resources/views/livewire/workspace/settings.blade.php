@@ -27,12 +27,13 @@
                     <flux:select.option :value="$model">{{ $model }}</flux:select.option>
                 @endforeach
             </flux:select>
-            <flux:select wire:model="prefilterModel" :label="__('Cheap pre-filter (optional)')" :description="__('Scores relevance first; full enrichment only for relevant items.')">
-                <flux:select.option value="">{{ __('Off') }}</flux:select.option>
-                @foreach ($this->models[$aiProvider] ?? [] as $model)
-                    <flux:select.option :value="$model">{{ $model }}</flux:select.option>
-                @endforeach
-            </flux:select>
+            @if ($aiProvider === 'openai')
+                <flux:select wire:model="reasoningEffort" :label="__('Reasoning effort')" :description="__('Higher effort can improve accuracy but costs more output tokens.')">
+                    @foreach (config('curation.ai.reasoning_efforts') as $effort)
+                        <flux:select.option :value="$effort">{{ ucfirst($effort) }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+            @endif
             <flux:input wire:model="dailyBudget" type="number" step="0.5" min="0" :label="__('Daily budget (USD)')" :description="__('Enrichment pauses for the day when reached.')" />
             <div class="sm:col-span-2">
                 <flux:button type="submit">{{ __('Save AI settings') }}</flux:button>

@@ -35,7 +35,7 @@ class Settings extends Component
 
     public string $aiModel = '';
 
-    public string $prefilterModel = '';
+    public string $reasoningEffort = 'none';
 
     public string $dailyBudget = '';
 
@@ -57,7 +57,7 @@ class Settings extends Component
         $this->name = $workspace->name;
         $this->aiProvider = (string) $workspace->setting('ai.provider');
         $this->aiModel = (string) $workspace->setting('ai.model');
-        $this->prefilterModel = (string) $workspace->setting('ai.prefilter_model');
+        $this->reasoningEffort = (string) $workspace->setting('ai.reasoning_effort', 'none');
         $this->dailyBudget = (string) $workspace->setting('ai.daily_budget_usd');
     }
 
@@ -133,21 +133,31 @@ class Settings extends Component
         Flux::toast(variant: 'success', text: __('Workspace saved.'));
     }
 
+    /**
+     * Each provider has its own model list; keep the selection valid when switching.
+     */
+    public function updatedAiProvider(): void
+    {
+        if (! in_array($this->aiModel, $this->models[$this->aiProvider] ?? [], true)) {
+            $this->aiModel = $this->models[$this->aiProvider][0] ?? '';
+        }
+    }
+
     public function saveAi(): void
     {
         $this->authorize('manage', $this->workspace);
 
         $this->validate([
             'aiProvider' => ['required', Rule::in(['openai', 'gemini'])],
-            'aiModel' => ['required', 'string', 'max:100'],
-            'prefilterModel' => ['nullable', 'string', 'max:100'],
+            'aiModel' => ['required', Rule::in($this->models[$this->aiProvider] ?? [])],
+            'reasoningEffort' => ['required', Rule::in((array) config('curation.ai.reasoning_efforts'))],
             'dailyBudget' => ['required', 'numeric', 'min:0', 'max:1000'],
         ]);
 
         $settings = $this->workspace->settings ?? [];
         data_set($settings, 'ai.provider', $this->aiProvider);
         data_set($settings, 'ai.model', $this->aiModel);
-        data_set($settings, 'ai.prefilter_model', $this->prefilterModel ?: null);
+        data_set($settings, 'ai.reasoning_effort', $this->reasoningEffort);
         data_set($settings, 'ai.daily_budget_usd', (float) $this->dailyBudget);
 
         $this->workspace->update(['settings' => $settings]);

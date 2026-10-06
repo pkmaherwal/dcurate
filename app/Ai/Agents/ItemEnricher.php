@@ -70,8 +70,6 @@ class ItemEnricher implements Agent, HasProviderOptions, HasStructuredOutput
      */
     public function providerOptions(Lab|string $provider): array
     {
-        $key = $provider instanceof Lab ? $provider->value : $provider;
-
-        return AiRouting::options($provider, AiRouting::chain($this->workspace)[$key] ?? '');
+        return AiRouting::options($this->workspace, $provider);
     }
 }

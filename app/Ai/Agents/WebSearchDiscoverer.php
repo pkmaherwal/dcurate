@@ -35,7 +35,7 @@ class WebSearchDiscoverer implements Agent, HasProviderOptions, HasTools
      */
     public function provider(): array
     {
-        return ['openai' => (string) $this->source->workspace->setting('ai.web_search_model', 'gpt-5.4-nano')];
+        return ['openai' => (string) $this->source->workspace->setting('ai.web_search_model', 'gpt-6-luna')];
     }
 
     public function instructions(): string
@@ -72,6 +72,6 @@ class WebSearchDiscoverer implements Agent, HasProviderOptions, HasTools
      */
     public function providerOptions(Lab|string $provider): array
     {
-        return AiRouting::options($provider, $this->provider()['openai']);
+        return AiRouting::options($this->source->workspace, $provider);
     }
 }

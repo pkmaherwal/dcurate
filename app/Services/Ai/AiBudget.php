@@ -45,7 +45,7 @@ class AiBudget
 
     public function cost(string $model, Usage $usage, int $webSearches = 0): float
     {
-        $pricing = config("curation.ai.pricing.{$model}", ['input' => 0.2, 'output' => 1.25]);
+        $pricing = config("curation.ai.pricing.{$model}", ['input' => 0.10, 'output' => 0.50]);
 
         return ($usage->inputTokens * (float) $pricing['input'] + $usage->outputTokens * (float) $pricing['output']) / 1_000_000
             + $webSearches * (float) config('curation.ai.web_search_cost_per_call', 0.01);

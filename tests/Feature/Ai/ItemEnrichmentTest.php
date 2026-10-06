@@ -3,7 +3,6 @@
 namespace Tests\Feature\Ai;
 
 use App\Ai\Agents\ItemEnricher;
-use App\Ai\Agents\RelevancePrefilter;
 use App\Ai\AiRouting;
 use App\Enums\AiStatus;
 use App\Enums\ItemStatus;
@@ -152,21 +151,6 @@ class ItemEnrichmentTest extends TestCase
         ItemEnricher::assertNeverPrompted();
     }
 
-    public function test_the_prefilter_skips_full_enrichment_for_irrelevant_items(): void
-    {
-        RelevancePrefilter::fake([['relevance' => 8, 'reason' => 'About WWE, not football.']]);
-        ItemEnricher::fake();
-        $this->workspace->update(['settings' => ['ai' => ['prefilter_model' => 'gpt-5-nano']]]);
-        $item = Item::factory()->for($this->source)->create(['title' => 'WWE Raw preview']);
-
-        app(ItemEnrichmentService::class)->enrich($item);
-
-        $item->refresh();
-        $this->assertSame(AiStatus::Done, $item->ai_status);
-        $this->assertSame(8, $item->ai_relevance);
-        ItemEnricher::assertNeverPrompted();
-    }
-
     public function test_failures_are_recorded_on_the_item(): void
     {
         ItemEnricher::fake(fn () => throw new RuntimeException('Rate limited'));
@@ -212,16 +196,15 @@ class ItemEnrichmentTest extends TestCase
         $this->assertSame(1, AiUsage::count());
     }
 
-    public function test_routing_turns_off_reasoning_and_adds_a_configured_fallback(): void
+    public function test_routing_uses_the_workspace_model_and_reasoning_effort(): void
     {
-        $this->assertSame(['reasoning' => ['effort' => 'none']], AiRouting::options('openai', 'gpt-5.4-nano'));
-        $this->assertSame(['reasoning' => ['effort' => 'minimal']], AiRouting::options('openai', 'gpt-5-nano'));
-        $this->assertSame([], AiRouting::options('gemini', 'gemini-3.1-flash-lite'));
-
-        config(['ai.providers.gemini.key' => null]);
-        $this->assertSame(['openai' => 'gpt-5.4-nano'], AiRouting::chain($this->workspace));
+        $this->assertSame(['reasoning' => ['effort' => 'none']], AiRouting::options($this->workspace, 'openai'));
+        $this->assertSame([], AiRouting::options($this->workspace, 'gemini'));
 
         config(['ai.providers.gemini.key' => 'test-key']);
-        $this->assertSame(['openai' => 'gpt-5.4-nano', 'gemini' => 'gemini-3.1-flash-lite'], AiRouting::chain($this->workspace));
+        $this->assertSame(['openai' => 'gpt-6-luna'], AiRouting::chain($this->workspace), 'No hidden fallback provider.');
+
+        $this->workspace->update(['settings' => ['ai' => ['reasoning_effort' => 'low']]]);
+        $this->assertSame(['reasoning' => ['effort' => 'low']], AiRouting::options($this->workspace, 'openai'));
     }
 }

@@ -54,15 +54,41 @@ class WorkspaceSettingsTest extends TestCase
         $this->actingInWorkspace($owner, $workspace);
 
         Livewire::test(Settings::class)
-            ->set('aiModel', 'gpt-5-nano')
-            ->set('prefilterModel', 'gpt-5-nano')
+            ->assertSet('reasoningEffort', 'none')
+            ->set('aiModel', 'gpt-6-luna')
+            ->set('reasoningEffort', 'low')
             ->set('dailyBudget', '2.5')
             ->call('saveAi')
             ->assertHasNoErrors();
 
         $workspace->refresh();
-        $this->assertSame('gpt-5-nano', $workspace->setting('ai.model'));
+        $this->assertSame('gpt-6-luna', $workspace->setting('ai.model'));
+        $this->assertSame('low', $workspace->setting('ai.reasoning_effort'));
         $this->assertSame(2.5, $workspace->setting('ai.daily_budget_usd'));
+    }
+
+    public function test_ai_settings_only_accept_known_models_and_efforts(): void
+    {
+        [$workspace, $owner] = $this->workspaceWithUser();
+        $this->actingInWorkspace($owner, $workspace);
+
+        Livewire::test(Settings::class)
+            ->set('aiModel', 'gpt-5-nano')
+            ->set('reasoningEffort', 'extreme')
+            ->call('saveAi')
+            ->assertHasErrors(['aiModel', 'reasoningEffort']);
+    }
+
+    public function test_switching_provider_picks_that_providers_model(): void
+    {
+        [$workspace, $owner] = $this->workspaceWithUser();
+        $this->actingInWorkspace($owner, $workspace);
+
+        Livewire::test(Settings::class)
+            ->set('aiProvider', 'gemini')
+            ->assertSet('aiModel', 'gemini-3.1-flash-lite')
+            ->set('aiProvider', 'openai')
+            ->assertSet('aiModel', 'gpt-6-luna');
     }
 
     public function test_reviewers_cannot_open_workspace_settings(): void

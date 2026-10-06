@@ -11,22 +11,13 @@ use Laravel\Ai\Enums\Lab;
 class AiRouting
 {
     /**
-     * Ordered provider => model map; the SDK fails over down the list.
+     * The workspace's provider => model map.
      *
      * @return array<string, string>
      */
-    public static function chain(Workspace $workspace, ?string $model = null): array
+    public static function chain(Workspace $workspace): array
     {
-        $provider = (string) $workspace->setting('ai.provider', 'openai');
-        $chain = [$provider => $model ?? (string) $workspace->setting('ai.model')];
-
-        $fallback = (string) $workspace->setting('ai.fallback_provider');
-
-        if ($fallback !== '' && $fallback !== $provider && filled(config("ai.providers.{$fallback}.key"))) {
-            $chain[$fallback] = (string) $workspace->setting('ai.fallback_model');
-        }
-
-        return $chain;
+        return [(string) $workspace->setting('ai.provider', 'openai') => (string) $workspace->setting('ai.model')];
     }
 
     /**
@@ -38,19 +29,18 @@ class AiRouting
     }
 
     /**
-     * Request options per provider. GPT-5.x models reason by default; curation needs none.
+     * Request options per provider. OpenAI models reason by default; the workspace picks the effort.
      *
      * @return array<string, mixed>
      */
-    public static function options(Lab|string $provider, string $model): array
+    public static function options(Workspace $workspace, Lab|string $provider): array
     {
         $provider = $provider instanceof Lab ? $provider->value : $provider;
 
-        if ($provider !== 'openai' || ! str_starts_with($model, 'gpt-5')) {
+        if ($provider !== 'openai') {
             return [];
         }
 
-        // The original GPT-5 family's lowest effort is "minimal"; 5.1+ supports "none".
-        return ['reasoning' => ['effort' => preg_match('/^gpt-5-(nano|mini)$|^gpt-5$/', $model) ? 'minimal' : 'none']];
+        return ['reasoning' => ['effort' => (string) $workspace->setting('ai.reasoning_effort', 'none')]];
     }
 }

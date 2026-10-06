@@ -108,7 +108,7 @@ return [
                 'text' => [
                     'default' => env('GEMINI_TEXT_MODEL', 'gemini-3.1-flash-lite'),
                     'cheapest' => 'gemini-3.1-flash-lite',
-                    'smartest' => 'gemini-3.8-flash',
+                    'smartest' => 'gemini-3.1-flash-lite',
                 ],
             ],
         ],
@@ -141,9 +141,9 @@ return [
             'store' => env('OPENAI_STORE', false),
             'models' => [
                 'text' => [
-                    'default' => env('OPENAI_TEXT_MODEL', 'gpt-5.4-nano'),
-                    'cheapest' => 'gpt-5-nano',
-                    'smartest' => 'gpt-5.4-mini',
+                    'default' => env('OPENAI_TEXT_MODEL', 'gpt-6-luna'),
+                    'cheapest' => 'gpt-6-luna',
+                    'smartest' => 'gpt-6-luna',
                 ],
             ],
         ],

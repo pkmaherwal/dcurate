@@ -27,12 +27,10 @@ return [
     'workspace_defaults' => [
         'ai' => [
             'provider' => env('CURATION_AI_PROVIDER', 'openai'),
-            'model' => env('CURATION_AI_MODEL', 'gpt-5.4-nano'),
-            // Cheap relevance-only pass before full enrichment (e.g. "gpt-5-nano"). Null disables it.
-            'prefilter_model' => env('CURATION_AI_PREFILTER_MODEL'),
-            'fallback_provider' => env('CURATION_AI_FALLBACK_PROVIDER', 'gemini'),
-            'fallback_model' => env('CURATION_AI_FALLBACK_MODEL', 'gemini-3.1-flash-lite'),
-            'web_search_model' => env('CURATION_AI_WEB_SEARCH_MODEL', 'gpt-5.4-nano'),
+            'model' => env('CURATION_AI_MODEL', 'gpt-6-luna'),
+            // OpenAI only; one of ai.reasoning_efforts below.
+            'reasoning_effort' => env('CURATION_AI_REASONING_EFFORT', 'none'),
+            'web_search_model' => env('CURATION_AI_WEB_SEARCH_MODEL', 'gpt-6-luna'),
             'daily_budget_usd' => (float) env('CURATION_AI_DAILY_BUDGET_USD', 5),
         ],
         'timezone' => env('CURATION_TIMEZONE', 'Asia/Kolkata'),
@@ -47,19 +45,19 @@ return [
     */
 
     'ai' => [
-        // Items scoring below this land in the "Low relevance" tab and skip full enrichment after a prefilter.
+        // Items scoring below this land in the "Low relevance" tab.
         'relevance_threshold' => 30,
         'max_content_chars' => 6000,
         'batch_size' => 10,
 
         // USD per 1M tokens, used for the estimated cost in ai_usage and the daily budget.
         'pricing' => [
-            'gpt-5.4-nano' => ['input' => 0.20, 'output' => 1.25],
-            'gpt-5-nano' => ['input' => 0.05, 'output' => 0.40],
-            'gpt-5.4-mini' => ['input' => 0.75, 'output' => 4.50],
+            'gpt-6-luna' => ['input' => 0.10, 'output' => 0.50],
             'gemini-3.1-flash-lite' => ['input' => 0.25, 'output' => 1.50],
-            'gemini-3.8-flash' => ['input' => 0.75, 'output' => 3.75],
         ],
+
+        // OpenAI reasoning effort levels offered in workspace settings ("none" is cheapest).
+        'reasoning_efforts' => ['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
 
         'web_search_cost_per_call' => 0.01,
     ],

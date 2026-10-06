@@ -63,8 +63,6 @@ class ListingExtractor implements Agent, HasProviderOptions, HasStructuredOutput
      */
     public function providerOptions(Lab|string $provider): array
     {
-        $key = $provider instanceof Lab ? $provider->value : $provider;
-
-        return AiRouting::options($provider, $this->provider()[$key] ?? '');
+        return AiRouting::options($this->workspace, $provider);
     }
 }
